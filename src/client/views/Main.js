@@ -1,11 +1,12 @@
 import React,{useState} from 'react';
-import {List,Divider,Typography} from 'antd';
 import 'antd/dist/antd.css';
+import TodoList from './TodoList';
 
 function Main() {
     const [TodoValue, setTodoValue] = useState("");
     const [TodoIndex, setTodoIndex] = useState(0);
     const [TodoArray, setTodoArray] = useState([]);
+    const [CountTodo, setCountTodo] = useState(0);
 
     const writingHandler = (e) => {
         setTodoValue(e.currentTarget.value);
@@ -14,6 +15,10 @@ function Main() {
     const submitHandler = (e) => {
         e.preventDefault();
 
+        if(TodoValue == ''){
+            alert("할 일을 입력해주세요.");
+            return;    
+        }
         const data = {
             TodoIndex : TodoIndex,
             TodoValue : TodoValue
@@ -33,14 +38,14 @@ function Main() {
             if(parseInt(item.TodoIndex) != parseInt(num)){
                 newData.push(item);
             }
-
         });
 
+        setCountTodo( newData.length);
         setTodoArray(newData);  //새롭게 만들어진 배열 setState
     }
 
     return (
-        <div className="todo-list-template"   style={{textAlign: 'center'}}>
+        <div className="todo-list-template" style={{textAlign: 'center'}}>
             <div className="title">
                 <h2>TODO LIST</h2>
             </div>
@@ -50,18 +55,12 @@ function Main() {
                     <button type="submit">등록</button>
                 </form>
             </section>
+
             <br/>
-            <>
-                <Divider orientation="left">[할 일 목록]</Divider>
-                <br/>
-                <List className="demo-loadmore-list">
-                    {TodoArray.map((item, index) => (
-                        <List.Item key={index} style={{textAlign: 'center'}}>
-                            <a onClick={() => completeHandler(item.TodoIndex)}><Typography.Text>  {item.TodoValue}</Typography.Text></a>
-                        </List.Item>
-                    ))}
-                </List>
-            </>
+
+            {/* TodoList */}            
+            <TodoList TodoArray={TodoArray} completeTodo={completeHandler} count={CountTodo}/>
+            {/* CompleteList */}
             <section>
                 
             
